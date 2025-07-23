@@ -1,21 +1,52 @@
+import requests
+from api_keys import stock_price_api_key
+
 STOCK_NAME = "TSLA"
 COMPANY_NAME = "Tesla Inc"
 
 STOCK_ENDPOINT = "https://www.alphavantage.co/query"
 NEWS_ENDPOINT = "https://newsapi.org/v2/everything"
 
+url = "https://www.alphavantage.co/query"
+
+params = {
+    "function": "TIME_SERIES_DAILY",
+    "symbol": STOCK_NAME,
+    "outputsize": "compact",
+    "apikey": stock_price_api_key,
+}
+
+response = requests.get(url=url, params=params).json()
+
     ## STEP 1: Use https://www.alphavantage.co/documentation/#daily
 # When stock price increase/decreases by 5% between yesterday and the day before yesterday then print("Get News").
 
-#TODO 1. - Get yesterday's closing stock price. Hint: You can perform list comprehensions on Python dictionaries. e.g. [new_value for (key, value) in dictionary.items()]
+# 1. - Get yesterday's closing stock price. Hint: You can perform list comprehensions on Python dictionaries. e.g. [new_value for (key, value) in dictionary.items()]
 
-#TODO 2. - Get the day before yesterday's closing stock price
+response_days = response["Time Series (Daily)"]
+closing_prices = [(key, response_days[key]["4. close"]) for (key, value) in response_days.items()]
+closing_price_yest = closing_prices[0][1]  # Get the closing price for yesterday
+print(closing_price_yest)
 
-#TODO 3. - Find the positive difference between 1 and 2. e.g. 40 - 20 = -20, but the positive difference is 20. Hint: https://www.w3schools.com/python/ref_func_abs.asp
+# 2. - Get the day before yesterday's closing stock price
 
-#TODO 4. - Work out the percentage difference in price between closing price yesterday and closing price the day before yesterday.
+closing_price_day_before_yest = closing_prices[1][1]  # Get the closing price for yesterday
+print(closing_price_day_before_yest)
 
-#TODO 5. - If TODO4 percentage is greater than 5 then print("Get News").
+# 3. - Find the positive difference between 1 and 2. e.g. 40 - 20 = -20, but the positive difference is 20. Hint: https://www.w3schools.com/python/ref_func_abs.asp
+
+difference = round(float(closing_price_yest) - float(closing_price_day_before_yest), 2)
+print(difference)
+
+# 4. - Work out the percentage difference in price between closing price yesterday and closing price the day before yesterday.
+
+percentage_difference = round((difference / float(closing_price_yest)) * 100, 2)
+print(percentage_difference, "%")
+
+# 5. - If TODO4 percentage is greater than 5 then print("Get News").
+
+if abs(percentage_difference) > 5:
+    print("Get News")
 
     ## STEP 2: https://newsapi.org/ 
     # Instead of printing ("Get News"), actually get the first 3 news pieces for the COMPANY_NAME. 
