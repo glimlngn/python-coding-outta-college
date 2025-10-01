@@ -53,7 +53,7 @@ class FlightSearch:
                                             ).json()
 
         if 'data' not in flight_offers or flight_offers["data"] == []:
-            with open("Day 39 - Flight Deal Tracker Part 1/test_output.txt", "w") as txtfile:
+            with open("Day 40 - Flight Deal Tracker Part 2/test_output.txt", "w") as txtfile:
                 txtfile.write(json.dumps(flight_offers, indent=4))
             return 'Search timeout or no flights found'
             
