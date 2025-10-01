@@ -29,7 +29,7 @@ class FlightSearch:
                    ).json()['data'][0]['iataCode']
         return city_code
     
-    def get_daywise_cheapest_flight(self, origin_city, destination_city, departure_date, duration):
+    def get_daywise_flight(self, origin_city, destination_city, departure_date, duration):
         return_date = (departure_date + timedelta(days=duration)).strftime('%Y-%m-%d')
         departure_date = departure_date.strftime('%Y-%m-%d')
         
@@ -38,30 +38,27 @@ class FlightSearch:
         airline_code = ""
         origin_airport = ""
         destination_airport = ""
-        flight_offers = {"data": []}
 
-        ctr = 0
-        while flight_offers["data"] == [] and ctr < 3:
-            flight_offers = requests.get(url=AMADEUS_FLIGHT_OFFERS_ENDPOINT, 
-                                        headers={'Authorization': f'Bearer {self.amadeus_auth_token}'}, 
-                                        params={'originLocationCode': origin_city, 
-                                                'destinationLocationCode': destination_city,
-                                                'departureDate': departure_date,
-                                                'returnDate': return_date,
-                                                'adults': 1, 
-                                                'nonStop': 'true',
-                                                'currencyCode': 'PHP',
-                                                'max': 5
-                                                }
-                                                ).json()
-            ctr += 1
+        flight_offers = requests.get(url=AMADEUS_FLIGHT_OFFERS_ENDPOINT, 
+                                    headers={'Authorization': f'Bearer {self.amadeus_auth_token}'}, 
+                                    params={'originLocationCode': origin_city, 
+                                            'destinationLocationCode': destination_city,
+                                            'departureDate': departure_date,
+                                            'returnDate': return_date,
+                                            'adults': 1, 
+                                            'nonStop': 'true',
+                                            'currencyCode': 'PHP',
+                                            'max': 5
+                                            }
+                                            ).json()
         
-        # with open("Day 39 - Flight Deal Tracker Part 1/output.txt", "w") as txtfile:
-        #     txtfile.write(json.dumps(flight_offers, indent=4))
 
-        if flight_offers["data"] == []:
-            print(f"{departure_date} to {return_date}: ", end="")
+
+        if 'data' not in flight_offers or flight_offers["data"] == []:
+            with open("Day 39 - Flight Deal Tracker Part 1/test_output.txt", "w") as txtfile:
+                txtfile.write(json.dumps(flight_offers, indent=4))
             return 'Search timeout or no flights found'
+            
 
         else:
             for offer in flight_offers["data"]:
