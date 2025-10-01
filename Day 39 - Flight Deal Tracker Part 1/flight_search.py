@@ -51,15 +51,12 @@ class FlightSearch:
                                             'max': 5
                                             }
                                             ).json()
-        
-
 
         if 'data' not in flight_offers or flight_offers["data"] == []:
             with open("Day 39 - Flight Deal Tracker Part 1/test_output.txt", "w") as txtfile:
                 txtfile.write(json.dumps(flight_offers, indent=4))
             return 'Search timeout or no flights found'
             
-
         else:
             for offer in flight_offers["data"]:
                 offer_price = float(offer["price"]["grandTotal"])
@@ -79,5 +76,13 @@ class FlightSearch:
             "departureDate": departure_date,
             "returnDate": return_date
         }
-
+        return cheapest_flight
+    
+    def get_cheapest_flight_per_city(self, flight_list): # give list of dicts of flight data
+        cheapest_price = 100000 # PHP
+        cheapest_flight = {}
+        for flight in flight_list:
+            if flight['price'] < cheapest_price:
+                cheapest_price = flight['price']
+                cheapest_flight = flight
         return cheapest_flight

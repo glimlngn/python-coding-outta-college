@@ -1,14 +1,12 @@
 #This file will need to use the DataManager, FlightSearch, FlightData, NotificationManager classes to achieve the program requirements.
 from data_manager import DataManager
 from flight_search import FlightSearch
-from flight_data import FlightData
 import pandas as pd
 import json
 from datetime import datetime, timedelta
 
 data_manager = DataManager()
 flight_search = FlightSearch()
-flight_data = FlightData()
 
 def get_cheapest_flights_list(sheets_data_df, month_start, month_end, origin_city, duration):
     cheapest_flights_list = []
@@ -36,10 +34,10 @@ def get_cheapest_flights_list(sheets_data_df, month_start, month_end, origin_cit
                 print("X")
 
             departure_date += timedelta(days=1)
-            days_from_now += 7  # check per week (to reduce API calls)
+            days_from_now += 14  # check per week (to reduce API calls)
             total += 1
 
-        cheapest_flight = flight_data.get_cheapest_flight_per_city(flight_list)
+        cheapest_flight = flight_search.get_cheapest_flight_per_city(flight_list)
 
         print(f"Score: {hits}/{total}. Hit Rate: {round((hits)/total*100,2)}%")
         print(f"The cheapest flight from {origin_city} to {destination_city} in the next {month_start}-{month_end} months is: ")
@@ -68,14 +66,10 @@ for index, row in sheets_data_df.iterrows():
 
 # print(sheets_data_df)
 
-origin_city = 'MNL'
-destination_city = 'HAN'
-days_from_now = 3*30 # 3 months from now
-departure_date = datetime.now() + timedelta(days=days_from_now)
-duration = 7 # days
-
 cheapest_flights_list = get_cheapest_flights_list(sheets_data_df, month_start=3, month_end=6, origin_city='MNL', duration=7)
 
 with open("Day 39 - Flight Deal Tracker Part 1/cheapest_flights_list.txt", "w") as txtfile:
     for flight in cheapest_flights_list:
         txtfile.write(str(flight) + "\n")
+
+data_manager.add_flights_to_sheets(cheapest_flights_list, sheets_data_df)
