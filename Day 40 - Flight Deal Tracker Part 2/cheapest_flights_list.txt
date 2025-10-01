@@ -1,0 +1,7 @@
+{'price': 16473.0, 'currencyCode': 'PHP', 'airline': 'VIETNAM AIRLINES', 'originAirport': 'MNL', 'destinationAirport': 'HAN', 'departureDate': '2025-12-30', 'returnDate': '2026-01-06'}
+{'price': 17926.0, 'currencyCode': 'PHP', 'airline': 'PHILIPPINE AIRLINES', 'originAirport': 'MNL', 'destinationAirport': 'CGK', 'departureDate': '2025-12-30', 'returnDate': '2026-01-06'}
+{'price': 5340.0, 'currencyCode': 'PHP', 'airline': 'PHILIPPINE AIRLINES', 'originAirport': 'MNL', 'destinationAirport': 'KUL', 'departureDate': '2025-12-30', 'returnDate': '2026-01-06'}
+{'price': 19471.0, 'currencyCode': 'PHP', 'airline': 'PHILIPPINE AIRLINES', 'originAirport': 'MNL', 'destinationAirport': 'SIN', 'departureDate': '2025-12-31', 'returnDate': '2026-01-07'}
+{'price': 15987.0, 'currencyCode': 'PHP', 'airline': 'PHILIPPINE AIRLINES', 'originAirport': 'MNL', 'destinationAirport': 'HKG', 'departureDate': '2025-12-30', 'returnDate': '2026-01-06'}
+{'price': 12254.0, 'currencyCode': 'PHP', 'airline': 'PHILIPPINE AIRLINES', 'originAirport': 'MNL', 'destinationAirport': 'TPE', 'departureDate': '2026-01-04', 'returnDate': '2026-01-11'}
+{'price': 25607.0, 'currencyCode': 'PHP', 'airline': 'PHILIPPINE AIRLINES', 'originAirport': 'MNL', 'destinationAirport': 'HND', 'departureDate': '2026-01-05', 'returnDate': '2026-01-12'}
