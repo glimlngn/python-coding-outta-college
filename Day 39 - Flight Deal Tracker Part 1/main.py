@@ -34,7 +34,7 @@ def get_cheapest_flights_list(sheets_data_df, month_start, month_end, origin_cit
                 print("X")
 
             departure_date += timedelta(days=1)
-            days_from_now += 14  # check per week (to reduce API calls)
+            days_from_now += 7  # check per week (to reduce API calls)
             total += 1
 
         cheapest_flight = flight_search.get_cheapest_flight_per_city(flight_list)
