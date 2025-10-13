@@ -7,6 +7,8 @@ import google_auth_oauthlib.flow
 import googleapiclient.discovery
 import googleapiclient.errors
 import pickle
+from datetime import datetime as dt
+import time
 
 load_dotenv()
 
@@ -26,10 +28,16 @@ song_list_div = soup.find_all(name='div', class_='o-chart-results-list-row-conta
 song_list = []
 for song_div in song_list_div:
     song_title = song_div.find(name='h3', id='title-of-a-story')
-    if song_title:
-        song_list.append(song_title.getText().strip())
+    artist = song_title.find_next_sibling('span') # type: ignore
+    if song_title and artist:
+        song_list.append({
+            'song_title':song_title.getText().strip(),
+            'artist': artist.getText().strip()})
     else: 
-        song_list.append(None)
+        song_list.append({
+            'song_title': None,
+            'artist': None
+        })
 
 for i in range(len(song_list)):
     print(f"{i+1}.", song_list[i])
@@ -38,7 +46,7 @@ for i in range(len(song_list)):
 # Authentication with YouTube Music (YouTube Data API v3)
 
 client_secrets_file = "day-46-youtube-music-playlist/client-secret-file.json"
-scopes = ["https://www.googleapis.com/auth/youtube.force-ssl"]
+scopes = ['https://www.googleapis.com/auth/youtube']
 api_service_name = "youtube"
 api_version = "v3"
 
@@ -54,20 +62,50 @@ else:
 youtube = googleapiclient.discovery.build(
     api_service_name, api_version, credentials=credentials)
 
-# SAMPLE: Search for my YouTube videos
-request = youtube.search().list(
-    part="snippet",
-    forMine=True,
-    maxResults=10,
-    order="date",
-    type="video",
-)
+# Create a playlist
+# TODO: check if there is an existing playlist with the same date, and skip playlist creation
+# if date == '':
+#     date = dt.now()
 
-response = request.execute()
-pprint.pp(response)
+# request = youtube.playlists().insert(
+#     part="snippet,status",
+#     body={
+#         "snippet": {
+#         "title": f"{dt.strftime(dt.now(), '%Y-%m-%d')} Billboard Hot 100",
+#         "description": "Made using blood, sweat, tears, and YouTube Data API v3.",
+#         "defaultLanguage": "en"
+#         },
+#         "status": {
+#         "privacyStatus": "public"
+#         }
+#     }
+# )
+# response = request.execute()
+# pprint.pp(response)
 
-# ---
-# TODO: Create empty playlist
+# Search for a YouTube video and add to playlist
+for song in song_list[:15]: # Top 15 songs for now
+    song_search_response = youtube.search().list(
+        part="snippet",
+        maxResults=1,
+        type='video',
+        q=f"{song['song_title']} - {song['artist']}"
+    ).execute()
+    video_id = song_search_response['items'][0]['id']['videoId']
 
-# ---
-# TODO: Search Billboard Hot 100 songs and add songs to playlist
+    # pprint.pp(song_search_response)
+
+    add_to_playlist_response = youtube.playlistItems().insert(
+        part="snippet",
+        body={
+            "snippet": {
+            "playlistId": 'PL4vB_Nnj9gxJzDK3NmK0uUj1bhaYFEaIp',
+            "resourceId": {
+                "kind": "youtube#video",
+                "videoId": video_id
+                }
+            }
+        }
+    ).execute()
+    time.sleep(5)
+    print(f'Added {song_search_response['items'][0]['snippet']['title']} to the playlist')
