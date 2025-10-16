@@ -15,3 +15,5 @@ day-46-youtube-music-playlist/.env
 day-46-youtube-music-playlist/__pycache__
 day-46-youtube-music-playlist/client-secret-file.json
 day-46-youtube-music-playlist/CREDENTIALS_PICKLE_FILE
+day-47-amazon-price-tracker/.env
+day-47-amazon-price-tracker/output.txt
